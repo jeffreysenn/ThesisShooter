@@ -34,7 +34,9 @@ int ATarget::OnTargetHit(FVector HitLocation)
 		return 0; 
 	}
 
-	else if (DistanceFromCentre > MiddleRingRadius)
+	OnTargetDamaged();
+
+	if (DistanceFromCentre > MiddleRingRadius && DistanceFromCentre <= TargetRadius)
 	{
 		OnTargetHitDelegate.Broadcast(OuterRingScore);
 		UE_LOG(LogTemp, Warning, TEXT("HitOuterRing"));
@@ -54,7 +56,6 @@ int ATarget::OnTargetHit(FVector HitLocation)
 		return InnerCircleScore;
 	}
 
-	OnTargetDamaged();
 
 	return 0;
 
