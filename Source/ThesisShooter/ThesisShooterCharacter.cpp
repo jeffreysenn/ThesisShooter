@@ -12,6 +12,7 @@
 #include "MotionControllerComponent.h"
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
 #include "Runtime/Engine/Public/DrawDebugHelpers.h"
+#include "Public/Target.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -188,7 +189,14 @@ void AThesisShooterCharacter::OnFire()
 
 							FColor Color = FColor(0, 0, 255);
 							DrawDebugLine(World, SpawnLocation, CameraWorldLocation + LookDirection * 9999999, Color, false, 1.0f, 0, 4.0f);
-							UE_LOG(LogTemp, Warning, TEXT("Hit Something"));
+							UE_LOG(LogTemp, Warning, TEXT("Hit %s"), *OutHit.GetActor()->GetName());
+							
+							//OnTargetHit
+							if (Cast<ATarget>(OutHit.GetActor()))
+							{
+								Cast<ATarget>(OutHit.GetActor())->OnTargetHit(OutHit.Location);
+							}
+							
 						}
 
 					}
