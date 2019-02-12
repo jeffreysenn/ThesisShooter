@@ -17,9 +17,13 @@ class THESISSHOOTER_API AThesisSHooterPlayerController : public APlayerControlle
 public:
 	AThesisSHooterPlayerController();
 
+	UPROPERTY(VisibleAnywhere)
 	int ShotHits;
+	UPROPERTY(VisibleAnywhere)
 	int Shots;
+
 	int TargetsHit;
+	UPROPERTY(VisibleAnywhere)
 	int AccuracyScore;
 
 	float FirstSectionTime;

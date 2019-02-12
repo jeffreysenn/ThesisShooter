@@ -209,8 +209,7 @@ void AThesisShooterCharacter::OnFire()
 								if (Cast<ATarget>(OutHit.GetActor()))
 								{
 									ThesisPlayerController->ShotHits++;
-									//ThesisPlayerController->AccuracyScore=
-									Cast<ATarget>(OutHit.GetActor())->OnTargetHit(OutHit.Location);
+									ThesisPlayerController->AccuracyScore += Cast<ATarget>(OutHit.GetActor())->OnTargetHit(OutHit.Location);
 								}
 
 							}
