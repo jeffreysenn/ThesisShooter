@@ -27,7 +27,7 @@ void ATarget::Tick(float DeltaTime)
 int ATarget::OnTargetHit(FVector HitLocation)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Recieve Hit!"));
-	if (!Centre) { return; }
+	if (!Centre) { return 0; }
 	float DistanceFromCentre = (HitLocation - Centre->GetComponentLocation()).Size();
 	if (DistanceFromCentre > TargetRadius) 
 	{ 
@@ -55,6 +55,8 @@ int ATarget::OnTargetHit(FVector HitLocation)
 	}
 
 	OnTargetDamaged();
+
+	return 0;
 
 }
 
