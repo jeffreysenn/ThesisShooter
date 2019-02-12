@@ -52,5 +52,5 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void FindCentreComponent(USceneComponent* CentreComponent);
 
-	virtual void NotifyHit(class UPrimitiveComponent* MyComp, AActor* Other, class UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit) override;
+	void OnTargetHit(FVector HitLocation);
 };

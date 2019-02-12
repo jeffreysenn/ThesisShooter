@@ -24,7 +24,7 @@ void ATarget::Tick(float DeltaTime)
 
 }
 
-void ATarget::NotifyHit(class UPrimitiveComponent* MyComp, AActor* Other, class UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
+void ATarget::OnTargetHit(FVector HitLocation)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Recieve Hit!"));
 	if (!Centre) { return; }
