@@ -8,7 +8,7 @@ AThesisSHooterPlayerController::AThesisSHooterPlayerController()
 	Shots = 0;
 	TargetsHit = 0;
 	AccuracyScore = 0;
-	GameSection = 1;
+	GameSection = 0;
 
 	FirstSectionTime = 0;
 	SecondSectionTime = 0;

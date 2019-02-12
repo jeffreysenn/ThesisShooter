@@ -314,20 +314,28 @@ void AThesisShooterCharacter::EndTouch(const ETouchIndex::Type FingerIndex, cons
 
 void AThesisShooterCharacter::MoveForward(float Value)
 {
-	if (Value != 0.0f)
+	if (ThesisPlayerController->GameSection!=1)
 	{
-		// add movement in that direction
-		AddMovementInput(GetActorForwardVector(), Value);
+		if (Value != 0.0f)
+		{
+			// add movement in that direction
+			AddMovementInput(GetActorForwardVector(), Value);
+		}
 	}
+	
 }
 
 void AThesisShooterCharacter::MoveRight(float Value)
 {
-	if (Value != 0.0f)
+	if (ThesisPlayerController->GameSection != 1)
 	{
-		// add movement in that direction
-		AddMovementInput(GetActorRightVector(), Value);
+		if (Value != 0.0f)
+		{
+			// add movement in that direction
+			AddMovementInput(GetActorRightVector(), Value);
+		}
 	}
+	
 }
 
 void AThesisShooterCharacter::TurnAtRate(float Rate)
