@@ -6,7 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Target.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTargetDelegate, int, score);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTargetDelegate, int32, score);
+
 
 UCLASS()
 class THESISSHOOTER_API ATarget : public AActor
@@ -27,13 +28,16 @@ public:
 	float InnerCircleRadius = 20;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	int OuterRingScore = 1;
+	int32 OuterRingScore = 1;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	int MiddleRingScore = 2;
+	int32 MiddleRingScore = 2;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	int InnerCircleScore = 4;
+	int32 InnerCircleScore = 4;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsShootable = false;
 
 	FTargetDelegate OnTargetHitDelegate;
 
@@ -52,8 +56,17 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void FindCentreComponent(USceneComponent* CentreComponent);
 
-	int OnTargetHit(FVector HitLocation);
+	int32 OnTargetHit(FVector HitLocation);
+
+	UFUNCTION(BlueprintCallable)
+	void ActivateTarget();
+
+	UFUNCTION(BlueprintCallable)
+	void DeactivateTarget();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnTargetDamaged();
+	void OnTargetDeactivated();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnTargetActivated();
 };

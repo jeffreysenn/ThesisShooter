@@ -24,17 +24,18 @@ void ATarget::Tick(float DeltaTime)
 
 }
 
-int ATarget::OnTargetHit(FVector HitLocation)
+int32 ATarget::OnTargetHit(FVector HitLocation)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Recieve Hit!"));
 	if (!Centre) { return 0; }
+	if (!bIsShootable) { return 0; }
 	float DistanceFromCentre = (HitLocation - Centre->GetComponentLocation()).Size();
 	if (DistanceFromCentre > TargetRadius) 
 	{ 
 		return 0; 
 	}
 
-	OnTargetDamaged();
+	DeactivateTarget();
 
 	if (DistanceFromCentre > MiddleRingRadius && DistanceFromCentre <= TargetRadius)
 	{
@@ -59,6 +60,18 @@ int ATarget::OnTargetHit(FVector HitLocation)
 
 	return 0;
 
+}
+
+void ATarget::ActivateTarget()
+{
+	bIsShootable = true;
+	OnTargetActivated();
+}
+
+void ATarget::DeactivateTarget()
+{
+	bIsShootable = false;
+	OnTargetDeactivated();
 }
 
 void ATarget::FindCentreComponent(USceneComponent* CentreComponent)
