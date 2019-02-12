@@ -45,6 +45,8 @@ class AThesisShooterCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UMotionControllerComponent* L_MotionController;
 
+	class AThesisSHooterPlayerController *ThesisPlayerController;
+
 public:
 	AThesisShooterCharacter();
 
