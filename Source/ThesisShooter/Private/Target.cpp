@@ -24,24 +24,37 @@ void ATarget::Tick(float DeltaTime)
 
 }
 
-void ATarget::OnTargetHit(FVector HitLocation)
+int ATarget::OnTargetHit(FVector HitLocation)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Recieve Hit!"));
 	if (!Centre) { return; }
 	float DistanceFromCentre = (HitLocation - Centre->GetComponentLocation()).Size();
-	if (DistanceFromCentre > TargetRadius) { return; }
+	if (DistanceFromCentre > TargetRadius) 
+	{ 
+		return 0; 
+	}
+
 	else if (DistanceFromCentre > MiddleRingRadius)
 	{
 		OnTargetHitDelegate.Broadcast(OuterRingScore);
+		UE_LOG(LogTemp, Warning, TEXT("HitOuterRing"));
+		return OuterRingScore;
+
 	}
 	else if (DistanceFromCentre > InnerCircleRadius)
 	{
 		OnTargetHitDelegate.Broadcast(MiddleRingScore);
+		UE_LOG(LogTemp, Warning, TEXT("HitMiddleRing"));
+		return MiddleRingScore;
 	}
 	else
 	{
 		OnTargetHitDelegate.Broadcast(InnerCircleScore);
+		UE_LOG(LogTemp, Warning, TEXT("HitBullsEye"));
+		return InnerCircleScore;
 	}
+
+	OnTargetDamaged();
 
 }
 

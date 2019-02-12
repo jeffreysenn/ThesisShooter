@@ -52,5 +52,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void FindCentreComponent(USceneComponent* CentreComponent);
 
-	void OnTargetHit(FVector HitLocation);
+	int OnTargetHit(FVector HitLocation);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnTargetDamaged();
 };
