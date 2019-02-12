@@ -37,9 +37,7 @@ public:
 	float ReactionTime;
 	
 	int32 GameSection;
-	bool StartedFirstSection =true;
-	bool StartedSecondSection;
-	bool StartedThirdSection;
+	
 
 	
 };
