@@ -11,6 +11,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "MotionControllerComponent.h"
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
+#include "Runtime/Engine/Public/DrawDebugHelpers.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -141,32 +142,66 @@ void AThesisShooterCharacter::SetupPlayerInputComponent(class UInputComponent* P
 void AThesisShooterCharacter::OnFire()
 {
 	// try and fire a projectile
-	if (ProjectileClass != NULL)
-	{
+	
 		UWorld* const World = GetWorld();
 		if (World != NULL)
 		{
-			if (bUsingMotionControllers)
+			if (FirstPersonCameraComponent != NULL)
 			{
-				const FRotator SpawnRotation = VR_MuzzleLocation->GetComponentRotation();
-				const FVector SpawnLocation = VR_MuzzleLocation->GetComponentLocation();
-				World->SpawnActor<AThesisShooterProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
-			}
-			else
-			{
-				const FRotator SpawnRotation = GetControlRotation();
-				// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-				const FVector SpawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
+				if (bUsingMotionControllers)
+				{
+					const FRotator SpawnRotation = VR_MuzzleLocation->GetComponentRotation();
+					const FVector SpawnLocation = VR_MuzzleLocation->GetComponentLocation();
+					//World->SpawnActor<AThesisShooterProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
+				}
+				else
+				{
+					const FRotator SpawnRotation = GetControlRotation();
+					// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+					const FVector SpawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
 
-				//Set Spawn Collision Handling Override
-				FActorSpawnParameters ActorSpawnParams;
-				ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+					//Set Spawn Collision Handling Override
+					//FActorSpawnParameters ActorSpawnParams;
+					//ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+					FHitResult OutHit;
+					FCollisionQueryParams Params;
+					FCollisionResponseParams  ResponseParam;
+					// Find the crosshair position in pixel coordinates
+					int32 ViewportSizeX, ViewportSizeY;
+					GetWorld()->GetFirstPlayerController()->GetViewportSize(ViewportSizeX, ViewportSizeY);
+					auto ScreenLocation = FVector2D(ViewportSizeX / 2, ViewportSizeY / 2);
 
-				// spawn the projectile at the muzzle
-				World->SpawnActor<AThesisShooterProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+					FVector CameraWorldLocation;
+					FVector LookDirection;
+					// "De-project" the screen position of the crosshair to a world direction
+					if (GetWorld()->GetFirstPlayerController()->DeprojectScreenPositionToWorld(
+						ScreenLocation.X,
+						ScreenLocation.Y,
+						CameraWorldLocation,
+						LookDirection
+					)) 
+					{
+
+						if (World->LineTraceSingleByChannel(OutHit, SpawnLocation, CameraWorldLocation + LookDirection * 9999999, ECollisionChannel::ECC_Visibility, Params, ResponseParam))
+						{
+
+
+							FColor Color = FColor(0, 0, 255);
+							DrawDebugLine(World, SpawnLocation, CameraWorldLocation + LookDirection * 9999999, Color, false, 1.0f, 0, 4.0f);
+							UE_LOG(LogTemp, Warning, TEXT("Hit Something"));
+						}
+
+					}
+					
+					
+						
+					// spawn the projectile at the muzzle
+					//World->SpawnActor<AThesisShooterProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+				}
 			}
+			
 		}
-	}
+	
 
 	// try and play the sound if specified
 	if (FireSound != NULL)
