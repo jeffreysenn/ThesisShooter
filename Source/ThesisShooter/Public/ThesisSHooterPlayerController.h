@@ -17,18 +17,29 @@ class THESISSHOOTER_API AThesisSHooterPlayerController : public APlayerControlle
 public:
 	AThesisSHooterPlayerController();
 
-	UPROPERTY(VisibleAnywhere)
-	int ShotHits;
-	UPROPERTY(VisibleAnywhere)
-	int Shots;
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 
-	int TargetsHit;
 	UPROPERTY(VisibleAnywhere)
-	int AccuracyScore;
+	int32 ShotHits;
+	UPROPERTY(VisibleAnywhere)
+	int32 Shots;
 
+	int32 TargetsHit;
+	UPROPERTY(VisibleAnywhere)
+	int32 AccuracyScore;
+
+	UPROPERTY(VisibleAnywhere)
 	float FirstSectionTime;
 	float SecondSectionTime;
 	float ThirdSectionTime;
 
 	float ReactionTime;
+	
+	int32 GameSection=1;
+	bool StartedFirstSection =true;
+	bool StartedSecondSection;
+	bool StartedThirdSection;
+
+	
 };

@@ -4,15 +4,35 @@
 
 AThesisSHooterPlayerController::AThesisSHooterPlayerController()
 {
-	int ShotHits = 0;
-	int Shots = 0;
-	int TargetsHit = 0;
-	int AccuracyScore = 0;
+	ShotHits = 0;
+	Shots = 0;
+	TargetsHit = 0;
+	AccuracyScore = 0;
+	GameSection = 1;
 
-	float FirstSectionTime = 0;
-	float SecondSectionTime = 0;
-	float ThirdSectionTime = 0;
+	FirstSectionTime = 0;
+	SecondSectionTime = 0;
+	ThirdSectionTime = 0;
 
-	float ReactionTime = 0;
+	ReactionTime = 0;
 }
 
+void AThesisSHooterPlayerController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	switch (GameSection)
+	{
+	case 1:
+		FirstSectionTime += DeltaTime;
+		break;
+	case 2:
+		SecondSectionTime += DeltaTime;
+		break;
+	case 3:
+		ThirdSectionTime += DeltaTime;
+		break;
+	}
+	
+
+}
