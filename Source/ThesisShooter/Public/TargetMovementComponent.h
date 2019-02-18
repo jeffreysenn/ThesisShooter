@@ -20,15 +20,15 @@ public:
 	TArray<class ATargetPoint*> TargetPoints;
 
 	UPROPERTY(EditAnywhere, Category = "Setup")
-	float TimeBetween = 6;
+	float SpeedPerSecond = 50;
 
 	UPROPERTY(EditAnywhere, Category = "Setup")
 	float AcceptanceRange = 10;
 
 protected:
 	TArray<FVector> TargetLocations;
-	int32 PreTargetIndex, NextTargetIndex;
-	float TimeSinceStartedMove;
+	FVector PreLocation;
+	int32 NextTargetIndex;
 
 protected:
 	// Called when the game starts

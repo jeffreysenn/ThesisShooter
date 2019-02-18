@@ -27,7 +27,7 @@ void UTargetMovementComponent::BeginPlay()
 
 void UTargetMovementComponent::SetTargetLocations()
 {
-	PreTargetIndex = 0;
+	PreLocation = GetOwner()->GetActorLocation();
 	NextTargetIndex = 0;
 	TargetLocations.Add(GetOwner()->GetActorLocation());
 	for (ATargetPoint* TargetPoint : TargetPoints)
@@ -44,14 +44,16 @@ void UTargetMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	if (!TargetPoints[0]) { return; }
-	if (PreTargetIndex == NextTargetIndex) { return; }
-	if (!Cast<ATarget>(GetOwner())->bIsShootable) { return; }
+	if (!Cast<ATarget>(GetOwner())->bIsShootable) 
+	{
+		PreLocation = GetOwner()->GetActorLocation();
+		return; 
+	}
 
 	if (FVector::Dist(GetOwner()->GetActorLocation(), TargetLocations[NextTargetIndex]) > AcceptanceRange)
 	{
-		TimeSinceStartedMove += DeltaTime;
-		FVector NewLocation = FMath::Lerp(TargetLocations[PreTargetIndex], TargetLocations[NextTargetIndex], TimeSinceStartedMove / TimeBetween);
-		GetOwner()->SetActorLocation(NewLocation);
+		FVector Direction = (TargetLocations[NextTargetIndex] - PreLocation).GetSafeNormal();
+		GetOwner()->AddActorWorldOffset(Direction * SpeedPerSecond * DeltaTime);
 	}
 	else
 	{
@@ -61,8 +63,7 @@ void UTargetMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 
 void UTargetMovementComponent::MoveToNextTarget()
 {
-	PreTargetIndex = NextTargetIndex;
+	PreLocation = GetOwner()->GetActorLocation();
 	NextTargetIndex = (NextTargetIndex + 1) % TargetLocations.Num();
-	TimeSinceStartedMove = 0;
 }
 

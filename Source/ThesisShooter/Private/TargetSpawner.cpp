@@ -54,7 +54,7 @@ void ATargetSpawner::ActivateStaticTarget()
 
 void ATargetSpawner::ActivateMovingTarget()
 {
-	int32 NextIndex = GetRandomInt(0, MovingTargets.Num() - 1, PreStaticTargetIndex);
+	int32 NextIndex = GetRandomInt(0, MovingTargets.Num() - 1, PreMovingTargetIndex);
 	PreMovingTargetIndex = NextIndex;
 
 	ATarget* TargetToActive = MovingTargets[NextIndex];
