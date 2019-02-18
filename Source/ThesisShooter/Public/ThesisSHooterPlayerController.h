@@ -20,6 +20,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	virtual void SaveDataToFile();
+
 	UPROPERTY(VisibleAnywhere)
 	int32 ShotHits;
 	UPROPERTY(VisibleAnywhere)
@@ -38,6 +40,9 @@ public:
 	
 	int32 GameSection;
 	
+	FString PlayerIndex = "123";
 
+protected:
+	virtual void SetupInputComponent() override;
 	
 };
