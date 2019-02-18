@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "TargetSpawner.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTargetSpawnerDelegate);
+
 UCLASS()
 class THESISSHOOTER_API ATargetSpawner : public AActor
 {
@@ -29,6 +31,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	int32 MovingTargetNum = 5;
+
+	UPROPERTY(BlueprintAssignable)
+	FTargetSpawnerDelegate OnAllTargitsHit;
 
 
 protected:

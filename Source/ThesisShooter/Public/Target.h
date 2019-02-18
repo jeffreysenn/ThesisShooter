@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Target.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTargetDelegate, int32, score);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTargetDelegate, int32, Score);
 
 
 UCLASS()

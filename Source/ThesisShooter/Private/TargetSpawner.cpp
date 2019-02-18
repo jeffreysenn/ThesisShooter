@@ -39,6 +39,10 @@ void ATargetSpawner::ActivateRandomTarget(int32 UselessPoint)
 		ActivateMovingTarget();
 		MoveingTargetCount++;
 	}
+	else
+	{
+		OnAllTargitsHit.Broadcast();
+	}
 }
 
 void ATargetSpawner::ActivateStaticTarget()
