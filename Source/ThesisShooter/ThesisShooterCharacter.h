@@ -82,11 +82,19 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	uint32 bUsingMotionControllers : 1;
 
-protected:
+	UPROPERTY(EditDefaultsOnly, Category = Input)
+	FVector2D VirtualJoystickCentre = FVector2D(0.15f, 0.7f);
+
+	UPROPERTY(EditDefaultsOnly, Category = Input)
+	FVector2D VirtualJoystickSize = FVector2D(256, 192);
+
+public:
 	
 	/** Fires a projectile. */
+	UFUNCTION(BlueprintCallable)
 	void OnFire();
 
+protected:
 	/** Resets HMD orientation and position in VR. */
 	void OnResetVR();
 
@@ -119,7 +127,7 @@ protected:
 	void BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void TouchUpdate(const ETouchIndex::Type FingerIndex, const FVector Location);
-	TouchData	TouchItem;
+	TouchData TouchItem;
 	
 protected:
 	// APawn interface
@@ -140,5 +148,7 @@ public:
 	/** Returns FirstPersonCameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE bool IsTouchPressed() { return TouchItem.bIsPressed; }
 };
 

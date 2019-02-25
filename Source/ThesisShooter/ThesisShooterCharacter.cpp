@@ -83,7 +83,6 @@ AThesisShooterCharacter::AThesisShooterCharacter()
 	VR_MuzzleLocation->SetRelativeLocation(FVector(0.000004, 53.999992, 10.000000));
 	VR_MuzzleLocation->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));		// Counteract the rotation of the VR gun model.
 
-	// Uncomment the following line to turn motion controllers on by default:
 	//bUsingMotionControllers = true;
 }
 
@@ -251,22 +250,36 @@ void AThesisShooterCharacter::OnResetVR()
 
 void AThesisShooterCharacter::BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location)
 {
+	UGameViewportClient* ViewportClient = GetWorld()->GetGameViewport();
+	if (!ViewportClient) { return; }
+	FVector2D ScreenSize;
+	ViewportClient->GetViewportSize(ScreenSize);
+	if (FGenericPlatformMath::Abs(Location.X - ScreenSize.X * VirtualJoystickCentre.X) > VirtualJoystickSize.X
+		&& FGenericPlatformMath::Abs(Location.Y - ScreenSize.Y * VirtualJoystickCentre.Y) > VirtualJoystickSize.Y
+		)
+	{
+		return;
+	}
+
+
 	if (TouchItem.bIsPressed == true)
 	{
 		return;
 	}
-	if ((FingerIndex == TouchItem.FingerIndex) && (TouchItem.bMoved == false))
-	{
-		OnFire();
-	}
-	TouchItem.bIsPressed = true;
+
 	TouchItem.FingerIndex = FingerIndex;
+	TouchItem.bIsPressed = true;
 	TouchItem.Location = Location;
 	TouchItem.bMoved = false;
 }
 
 void AThesisShooterCharacter::EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location)
 {
+	if (FingerIndex != TouchItem.FingerIndex)
+	{
+		return;
+	}
+	
 	if (TouchItem.bIsPressed == false)
 	{
 		return;
@@ -277,40 +290,38 @@ void AThesisShooterCharacter::EndTouch(const ETouchIndex::Type FingerIndex, cons
 //Commenting this section out to be consistent with FPS BP template.
 //This allows the user to turn without using the right virtual joystick
 
-//void AThesisShooterCharacter::TouchUpdate(const ETouchIndex::Type FingerIndex, const FVector Location)
-//{
-//	if ((TouchItem.bIsPressed == true) && (TouchItem.FingerIndex == FingerIndex))
-//	{
-//		if (TouchItem.bIsPressed)
-//		{
-//			if (GetWorld() != nullptr)
-//			{
-//				UGameViewportClient* ViewportClient = GetWorld()->GetGameViewport();
-//				if (ViewportClient != nullptr)
-//				{
-//					FVector MoveDelta = Location - TouchItem.Location;
-//					FVector2D ScreenSize;
-//					ViewportClient->GetViewportSize(ScreenSize);
-//					FVector2D ScaledDelta = FVector2D(MoveDelta.X, MoveDelta.Y) / ScreenSize;
-//					if (FMath::Abs(ScaledDelta.X) >= 4.0 / ScreenSize.X)
-//					{
-//						TouchItem.bMoved = true;
-//						float Value = ScaledDelta.X * BaseTurnRate;
-//						AddControllerYawInput(Value);
-//					}
-//					if (FMath::Abs(ScaledDelta.Y) >= 4.0 / ScreenSize.Y)
-//					{
-//						TouchItem.bMoved = true;
-//						float Value = ScaledDelta.Y * BaseTurnRate;
-//						AddControllerPitchInput(Value);
-//					}
-//					TouchItem.Location = Location;
-//				}
-//				TouchItem.Location = Location;
-//			}
-//		}
-//	}
-//}
+void AThesisShooterCharacter::TouchUpdate(const ETouchIndex::Type FingerIndex, const FVector Location)
+{
+	
+		if (TouchItem.bIsPressed && (TouchItem.FingerIndex == FingerIndex))
+		{
+			if (GetWorld() != nullptr)
+			{
+				UGameViewportClient* ViewportClient = GetWorld()->GetGameViewport();
+				if (ViewportClient != nullptr)
+				{
+					FVector MoveDelta = Location - TouchItem.Location;
+					FVector2D ScreenSize;
+					ViewportClient->GetViewportSize(ScreenSize);
+					FVector2D ScaledDelta = FVector2D(MoveDelta.X, MoveDelta.Y) / ScreenSize;
+					if (FMath::Abs(ScaledDelta.X) >= 1.0 / ScreenSize.X)
+					{
+						TouchItem.bMoved = true;
+						float Value = ScaledDelta.X * BaseTurnRate;
+						AddControllerYawInput(Value);
+					}
+					if (FMath::Abs(ScaledDelta.Y) >= 1.0 / ScreenSize.Y)
+					{
+						TouchItem.bMoved = true;
+						float Value = ScaledDelta.Y * BaseTurnRate;
+						AddControllerPitchInput(Value);
+					}
+					TouchItem.Location = Location;
+				}
+				TouchItem.Location = Location;
+			}
+		}
+}
 
 void AThesisShooterCharacter::MoveForward(float Value)
 {
@@ -358,9 +369,10 @@ bool AThesisShooterCharacter::EnableTouchscreenMovement(class UInputComponent* P
 		PlayerInputComponent->BindTouch(EInputEvent::IE_Released, this, &AThesisShooterCharacter::EndTouch);
 
 		//Commenting this out to be more consistent with FPS BP template.
-		//PlayerInputComponent->BindTouch(EInputEvent::IE_Repeat, this, &AThesisShooterCharacter::TouchUpdate);
+		PlayerInputComponent->BindTouch(EInputEvent::IE_Repeat, this, &AThesisShooterCharacter::TouchUpdate);
 		return true;
 	}
 	
 	return false;
 }
+
