@@ -53,14 +53,32 @@ public:
 protected:
 	virtual void BeginPlay();
 
+	virtual void Tick(float DeltaSeconds);
+
 public:
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Camera)
 	float BaseTurnRate;
 
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
+
+	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Camera)
+	float BaseTouchTurnRate = 60;
+
+	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Camera)
+	float BaseTouchLookUpRate = 60;
+
+	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Camera)
+	float BaseGyroTurnRate = 1;
+
+	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category=Camera)
+	float BaseGyroLookUpRate = 1;
 
 	/** Gun muzzle's offset from the characters location */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
@@ -80,13 +98,7 @@ public:
 
 	/** Whether to use motion controller location for aiming. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-	uint32 bUsingMotionControllers : 1;
-
-	UPROPERTY(EditDefaultsOnly, Category = Input)
-	FVector2D VirtualJoystickCentre = FVector2D(0.15f, 0.7f);
-
-	UPROPERTY(EditDefaultsOnly, Category = Input)
-	FVector2D VirtualJoystickSize = FVector2D(256, 192);
+	bool bUsingGyroScope;
 
 public:
 	
@@ -142,6 +154,7 @@ protected:
 	 */
 	bool EnableTouchscreenMovement(UInputComponent* InputComponent);
 
+
 public:
 	/** Returns Mesh1P subobject **/
 	FORCEINLINE class USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
@@ -150,5 +163,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE bool IsTouchPressed() { return TouchItem.bIsPressed; }
+
+	UFUNCTION(BlueprintCallable)
+	void SetUsingGyroScope(bool bShouldUse);
 };
 

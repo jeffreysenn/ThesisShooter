@@ -83,7 +83,7 @@ AThesisShooterCharacter::AThesisShooterCharacter()
 	VR_MuzzleLocation->SetRelativeLocation(FVector(0.000004, 53.999992, 10.000000));
 	VR_MuzzleLocation->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));		// Counteract the rotation of the VR gun model.
 
-	//bUsingMotionControllers = true;
+	bUsingGyroScope = true;
 }
 
 void AThesisShooterCharacter::BeginPlay()
@@ -95,12 +95,12 @@ void AThesisShooterCharacter::BeginPlay()
 	FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
 
 	// Show or hide the two versions of the gun based on whether or not we're using motion controllers.
-	if (bUsingMotionControllers)
-	{
-		VR_Gun->SetHiddenInGame(false, true);
-		Mesh1P->SetHiddenInGame(true, true);
-	}
-	else
+	//if (bUsingGyroScope)
+	//{
+	//	VR_Gun->SetHiddenInGame(false, true);
+	//	Mesh1P->SetHiddenInGame(true, true);
+	//}
+	//else
 	{
 		VR_Gun->SetHiddenInGame(true, true);
 		Mesh1P->SetHiddenInGame(false, true);
@@ -115,6 +115,24 @@ void AThesisShooterCharacter::BeginPlay()
 	}
 	
 }
+
+void AThesisShooterCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if (bUsingGyroScope && ThesisPlayerController)
+	{
+		FVector OutTilt, OutRotationRate, OutGravity, OutAcceleration;
+
+		ThesisPlayerController->GetInputMotionState(OutTilt, OutRotationRate, OutGravity, OutAcceleration);
+		AddControllerYawInput(OutRotationRate.X * -BaseGyroTurnRate);
+		AddControllerPitchInput(OutRotationRate.Y * BaseGyroLookUpRate);
+	}
+}
+
+
+
+
 
 //////////////////////////////////////////////////////////////////////////
 // Input
@@ -136,6 +154,7 @@ void AThesisShooterCharacter::SetupPlayerInputComponent(class UInputComponent* P
 
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AThesisShooterCharacter::OnResetVR);
 
+
 	// Bind movement events
 	PlayerInputComponent->BindAxis("MoveForward", this, &AThesisShooterCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AThesisShooterCharacter::MoveRight);
@@ -147,6 +166,7 @@ void AThesisShooterCharacter::SetupPlayerInputComponent(class UInputComponent* P
 	PlayerInputComponent->BindAxis("TurnRate", this, &AThesisShooterCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AThesisShooterCharacter::LookUpAtRate);
+
 }
 
 void AThesisShooterCharacter::OnFire()
@@ -162,13 +182,13 @@ void AThesisShooterCharacter::OnFire()
 
 				if (FirstPersonCameraComponent != NULL)
 				{
-					if (bUsingMotionControllers)
-					{
-						const FRotator SpawnRotation = VR_MuzzleLocation->GetComponentRotation();
-						const FVector SpawnLocation = VR_MuzzleLocation->GetComponentLocation();
-						//World->SpawnActor<AThesisShooterProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
-					}
-					else
+					//if (bUsingMotionControllers)
+					//{
+					//	const FRotator SpawnRotation = VR_MuzzleLocation->GetComponentRotation();
+					//	const FVector SpawnLocation = VR_MuzzleLocation->GetComponentLocation();
+					//	//World->SpawnActor<AThesisShooterProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
+					//}
+					//else
 					{
 						const FRotator SpawnRotation = GetControlRotation();
 						// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
@@ -250,18 +270,6 @@ void AThesisShooterCharacter::OnResetVR()
 
 void AThesisShooterCharacter::BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location)
 {
-	UGameViewportClient* ViewportClient = GetWorld()->GetGameViewport();
-	if (!ViewportClient) { return; }
-	FVector2D ScreenSize;
-	ViewportClient->GetViewportSize(ScreenSize);
-	if (FGenericPlatformMath::Abs(Location.X - ScreenSize.X * VirtualJoystickCentre.X) > VirtualJoystickSize.X
-		&& FGenericPlatformMath::Abs(Location.Y - ScreenSize.Y * VirtualJoystickCentre.Y) > VirtualJoystickSize.Y
-		)
-	{
-		return;
-	}
-
-
 	if (TouchItem.bIsPressed == true)
 	{
 		return;
@@ -307,13 +315,13 @@ void AThesisShooterCharacter::TouchUpdate(const ETouchIndex::Type FingerIndex, c
 					if (FMath::Abs(ScaledDelta.X) >= 1.0 / ScreenSize.X)
 					{
 						TouchItem.bMoved = true;
-						float Value = ScaledDelta.X * BaseTurnRate;
+						float Value = ScaledDelta.X * BaseTouchTurnRate;
 						AddControllerYawInput(Value);
 					}
 					if (FMath::Abs(ScaledDelta.Y) >= 1.0 / ScreenSize.Y)
 					{
 						TouchItem.bMoved = true;
-						float Value = ScaledDelta.Y * BaseTurnRate;
+						float Value = ScaledDelta.Y * BaseTouchLookUpRate;
 						AddControllerPitchInput(Value);
 					}
 					TouchItem.Location = Location;
@@ -374,5 +382,10 @@ bool AThesisShooterCharacter::EnableTouchscreenMovement(class UInputComponent* P
 	}
 	
 	return false;
+}
+
+void AThesisShooterCharacter::SetUsingGyroScope(bool bShouldUse)
+{
+	bUsingGyroScope = bShouldUse;
 }
 
