@@ -17,6 +17,8 @@ AThesisSHooterPlayerController::AThesisSHooterPlayerController()
 	ThirdSectionTime = 0;
 
 	ReactionTime = 0;
+
+
 }
 
 void AThesisSHooterPlayerController::SetupInputComponent()
@@ -58,7 +60,19 @@ void AThesisSHooterPlayerController::SaveDataToFile()
 		+ "First section time: " + FString::SanitizeFloat(FirstSectionTime) + LINE_TERMINATOR
 		+ "Second section time: "+ FString::SanitizeFloat(SecondSectionTime) + LINE_TERMINATOR
 		+ "Third section time: " + FString::SanitizeFloat(ThirdSectionTime) + LINE_TERMINATOR
-		+"Total time: " + FString::SanitizeFloat(FirstSectionTime + SecondSectionTime + ThirdSectionTime) + LINE_TERMINATOR + LINE_TERMINATOR + LINE_TERMINATOR + LINE_TERMINATOR);
+		+"Total time: " + FString::SanitizeFloat(FirstSectionTime + SecondSectionTime + ThirdSectionTime) + LINE_TERMINATOR 
+		+ "Hit Times On Static Targets: " + LINE_TERMINATOR);
+
+	
+	if (HitTimesStaticTargets.Num())
+	{
+		for (int32 i = 0; i < HitTimesStaticTargets.Num(); i++)
+		{
+			DataContent += FString("" + FString::SanitizeFloat(HitTimesStaticTargets[i]) + LINE_TERMINATOR);
+		}
+	}
+
+	DataContent += FString(+LINE_TERMINATOR);
 
 	FString FilePath = FPaths::ConvertRelativePathToFull(FPaths::GameSavedDir()) + TEXT("/DataLog"+ PlayerIndex +".txt");
 	FString FileContent = TEXT(""+DataContent);

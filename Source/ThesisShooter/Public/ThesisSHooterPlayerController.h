@@ -42,6 +42,8 @@ public:
 	
 	FString PlayerIndex = "123";
 
+	TArray<float> HitTimesStaticTargets;
+
 protected:
 	virtual void SetupInputComponent() override;
 	

@@ -229,6 +229,7 @@ void AThesisShooterCharacter::OnFire()
 								{
 									ThesisPlayerController->ShotHits++;
 									ThesisPlayerController->AccuracyScore += Cast<ATarget>(OutHit.GetActor())->OnTargetHit(OutHit.Location);
+									ThesisPlayerController->HitTimesStaticTargets.Add(UGameplayStatics::GetRealTimeSeconds(GetWorld()));
 								}
 
 							}
@@ -258,7 +259,7 @@ void AThesisShooterCharacter::OnFire()
 		UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
 		if (AnimInstance != NULL)
 		{
-			AnimInstance->Montage_Play(FireAnimation, 1.f);
+			//AnimInstance->Montage_Play(FireAnimation, 1.f);
 		}
 	}
 }
