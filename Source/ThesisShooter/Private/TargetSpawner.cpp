@@ -113,6 +113,7 @@ void ATargetSpawner::SortAllTargets()
 	{
 		ATarget* Target = Cast<ATarget>(TargetObj);
 		if (!Target) { continue; }
+		if (Target->bIsCharacterTarget) { continue; }
 		Targets.Add(Target);
 		if (DoesTargetHaveTargetMovementComp(Target))
 		{

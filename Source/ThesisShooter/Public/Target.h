@@ -19,6 +19,12 @@ public:
 	ATarget();
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	bool bIsCharacterTarget = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Setup")
+	bool bIsShootable = false;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	float TargetRadius = 50;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
@@ -36,8 +42,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	int32 InnerCircleScore = 4;
 
-	UPROPERTY(BlueprintReadWrite)
-	bool bIsShootable = false;
 
 	FTargetDelegate OnTargetHitDelegate;
 
