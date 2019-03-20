@@ -49,9 +49,12 @@ void AMovementSecitonSpawner::SpawnMovmeentSections(int32 SectionsToSpawn)
 			}
 			else
 			{
-				if (MovementSectionsSpawned.IsValidIndex(MovementSectionsSpawned.Num() - 1)) 
+				if (MovementSectionsSpawned.Last())
 				{
-					FVector Pos = MovementSectionsSpawned[MovementSectionsSpawned.Num() - 1]->EndPosition->GetComponentLocation();
+					FVector Pos = MovementSectionsSpawned.Last()->EndPosition->GetComponentLocation();
+
+
+					//FVector Pos = MovementSectionsSpawned[MovementSectionsSpawned.Num() - 1]->EndPosition->GetComponentLocation();
 					temp = GetWorld()->SpawnActor<ASectionTile>(MovementSectionsThatCanSpawn[rand], Pos, this->GetActorRotation());
 					MovementSectionsSpawned.Add(temp);
 				}
