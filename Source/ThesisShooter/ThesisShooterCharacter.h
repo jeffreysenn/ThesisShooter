@@ -47,6 +47,8 @@ class AThesisShooterCharacter : public ACharacter
 
 	class AThesisSHooterPlayerController *ThesisPlayerController;
 
+	class UC_ThesisGameInstance * ThesisGameInstance;
+
 public:
 	AThesisShooterCharacter();
 
@@ -54,6 +56,7 @@ protected:
 	virtual void BeginPlay();
 
 	virtual void Tick(float DeltaSeconds);
+
 
 public:
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
@@ -100,6 +103,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	bool bUsingGyroScope;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	bool CanMove = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		bool CanShoot = true;
 public:
 	
 	/** Fires a projectile. */

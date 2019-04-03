@@ -5,22 +5,30 @@
 #include "Paths.h"
 #include "ThesisShooterGameMode.h"
 #include "Runtime/Engine/Classes/Engine/World.h"
+#include "C_ThesisGameInstance.h"
 
 AThesisSHooterPlayerController::AThesisSHooterPlayerController()
 {
-	ShotHits = 0;
-	Shots = 0;
-	TargetsHit = 0;
-	AccuracyScore = 0;
-	GameSection = 0;
+	
 
-	FirstSectionTime = 0;
-	SecondSectionTime = 0;
-	ThirdSectionTime = 0;
-
-	ReactionTime = 0;
+	
 
 
+}
+
+
+void AThesisSHooterPlayerController::BeginPlay()
+{
+	// Call the base class  
+	Super::BeginPlay();
+	if (Cast<UC_ThesisGameInstance>(GetWorld()->GetGameInstance()))
+	{
+		ThesisGameInstance = Cast<UC_ThesisGameInstance>(GetWorld()->GetGameInstance());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("@construction Failed to cast and assign  variable gmae instance to UC_ThesisGameInstance "));
+	}
 }
 
 void AThesisSHooterPlayerController::SetupInputComponent()
@@ -34,16 +42,16 @@ void AThesisSHooterPlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	switch (GameSection)
+	switch (ThesisGameInstance->GameSection)
 	{
 	case 1:
-		FirstSectionTime += DeltaTime;
+		ThesisGameInstance->FirstSectionTime += DeltaTime;
 		break;
 	case 2:
-		SecondSectionTime += DeltaTime;
+		ThesisGameInstance->SecondSectionTime += DeltaTime;
 		break;
 	case 3:
-		ThirdSectionTime += DeltaTime;
+		ThesisGameInstance->ThirdSectionTime += DeltaTime;
 		break;
 	}
 	
@@ -51,6 +59,12 @@ void AThesisSHooterPlayerController::Tick(float DeltaTime)
 }
 void AThesisSHooterPlayerController::SaveDataToFile()
 {
+	/*Cast<UC_ThesisGameInstance>(GetWorld()->GetGameInstance())->SetGameSectionTime(1, FirstSectionTime);
+	Cast<UC_ThesisGameInstance>(GetWorld()->GetGameInstance())->SetGameSectionTime(2, SecondSectionTime);
+	Cast<UC_ThesisGameInstance>(GetWorld()->GetGameInstance())->SetGameSectionTime(3, ThirdSectionTime);*/
+	
+	Cast<UC_ThesisGameInstance>(GetWorld()->GetGameInstance())->SaveDataToFile();
+	/*
 
 	UE_LOG(LogTemp, Warning, TEXT("@SaveDataToFile saving data to file "));
 	FString DataContent = FString("Participant: " + Cast<AThesisShooterGameMode>(GetWorld()->GetAuthGameMode())->GetPlayerIndex() + LINE_TERMINATOR
@@ -73,12 +87,12 @@ void AThesisSHooterPlayerController::SaveDataToFile()
 			DataContent += FString("" + FString::SanitizeFloat(HitTimesStaticTargets[i]) + LINE_TERMINATOR);
 		}
 	}
-	GetWorld()->GetGameInstance
-	DataContent += FString(+LINE_TERMINATOR);
+	
+	DataContent += FString(+ LINE_TERMINATOR);
 	FString FilePath = FPaths::ConvertRelativePathToFull(FPaths::GameSavedDir()) + TEXT("/DataLog_"+ Cast<AThesisShooterGameMode>(GetWorld()->GetAuthGameMode())->GetPlayerIndex() +".txt");
 	FString FileContent = TEXT(""+DataContent);
 	FFileHelper::SaveStringToFile(FileContent, *FilePath, FFileHelper::EEncodingOptions::AutoDetect, &IFileManager::Get(), EFileWrite::FILEWRITE_Append);
-
+	*/
 }
 
 

@@ -17,33 +17,15 @@ class THESISSHOOTER_API AThesisSHooterPlayerController : public APlayerControlle
 public:
 	AThesisSHooterPlayerController();
 
+	class UC_ThesisGameInstance * ThesisGameInstance;
+	
+	virtual void BeginPlay();
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void SaveDataToFile();
 
-	UPROPERTY(VisibleAnywhere)
-	int32 ShotHits;
-	UPROPERTY(VisibleAnywhere)
-	int32 Shots;
-
-	int32 TargetsHit;
-	UPROPERTY(VisibleAnywhere)
-	int32 AccuracyScore;
-
-	UPROPERTY(VisibleAnywhere)
-	float FirstSectionTime;
-	float SecondSectionTime;
-	float ThirdSectionTime;
-
-	float ReactionTime;
 	
-	int32 GameSection;
-	
-	//FString PlayerIndex = "123";
-
-	TArray<float> HitTimesStaticTargets;
-
 protected:
 	virtual void SetupInputComponent() override;
 	

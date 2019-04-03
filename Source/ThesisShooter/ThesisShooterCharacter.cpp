@@ -14,6 +14,7 @@
 #include "Runtime/Engine/Public/DrawDebugHelpers.h"
 #include "Public/Target.h"
 #include "Public/ThesisSHooterPlayerController.h"
+#include "C_ThesisGameInstance.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -98,13 +99,23 @@ void AThesisShooterCharacter::BeginPlay()
 	//if (bUsingGyroScope)
 	//{
 	//	VR_Gun->SetHiddenInGame(false, true);
-	//	Mesh1P->SetHiddenInGame(true, true);
+	//	Mesh1P->SetHiddenInGame(true, true);ThesisGameInstance
 	//}
 	//else
 	{
 		VR_Gun->SetHiddenInGame(true, true);
 		Mesh1P->SetHiddenInGame(false, true);
 	}
+
+	if (Cast<UC_ThesisGameInstance>(GetWorld()->GetGameInstance()))
+	{
+		ThesisGameInstance = Cast<UC_ThesisGameInstance>(GetWorld()->GetGameInstance());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("@BeinPlay Failed to cast and assign  variable gmae instance to UC_ThesisGameInstance "));
+	}
+
 	if (Cast<AThesisSHooterPlayerController>(this->GetController()))
 	{
 		ThesisPlayerController = Cast<AThesisSHooterPlayerController>(this->GetController());
@@ -172,11 +183,12 @@ void AThesisShooterCharacter::SetupPlayerInputComponent(class UInputComponent* P
 void AThesisShooterCharacter::OnFire()
 {
 	// try and fire a projectile
-	
+	if (CanShoot==true) 
+	{
 		UWorld* const World = GetWorld();
 		if (World != NULL)
 		{
-			if (ThesisPlayerController !=NULL)
+			if (ThesisGameInstance != NULL)
 			{
 
 
@@ -218,7 +230,7 @@ void AThesisShooterCharacter::OnFire()
 
 							if (World->LineTraceSingleByChannel(OutHit, SpawnLocation, CameraWorldLocation + LookDirection * 9999999, ECollisionChannel::ECC_Visibility, Params, ResponseParam))
 							{
-								ThesisPlayerController->Shots++;
+								ThesisGameInstance->Shots++;
 
 								FColor Color = FColor(0, 0, 255);
 								DrawDebugLine(World, SpawnLocation, CameraWorldLocation + LookDirection * 9999999, Color, false, 1.0f, 0, 4.0f);
@@ -227,9 +239,22 @@ void AThesisShooterCharacter::OnFire()
 								//OnTargetHit
 								if (Cast<ATarget>(OutHit.GetActor()))
 								{
-									ThesisPlayerController->ShotHits++;
-									ThesisPlayerController->AccuracyScore += Cast<ATarget>(OutHit.GetActor())->OnTargetHit(OutHit.Location);
-									ThesisPlayerController->HitTimesStaticTargets.Add(UGameplayStatics::GetRealTimeSeconds(GetWorld()));
+									if (Cast<ATarget>(OutHit.GetActor())->bIsShootable == true)
+									{
+										ThesisGameInstance->ShotHits++;
+										ThesisGameInstance->AccuracyScore += Cast<ATarget>(OutHit.GetActor())->OnTargetHit(OutHit.Location);
+
+										if (ThesisGameInstance->GameSection == 1)
+										{
+											ThesisGameInstance->HitTimesFirstSectionTargets.Add(UGameplayStatics::GetRealTimeSeconds(GetWorld()));
+										}
+										else if (ThesisGameInstance->GameSection == 3)
+										{
+
+										}
+
+									}
+
 								}
 
 							}
@@ -244,24 +269,30 @@ void AThesisShooterCharacter::OnFire()
 				}
 			}
 		}
-	
 
-	// try and play the sound if specified
-	if (FireSound != NULL)
-	{
-		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
-	}
 
-	// try and play a firing animation if specified
-	if (FireAnimation != NULL)
-	{
-		// Get the animation object for the arms mesh
-		UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
-		if (AnimInstance != NULL)
+		// try and play the sound if specified
+		if (FireSound != NULL)
 		{
-			//AnimInstance->Montage_Play(FireAnimation, 1.f);
+			UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+		}
+
+		// try and play a firing animation if specified
+		if (FireAnimation != NULL)
+		{
+			// Get the animation object for the arms mesh
+			UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
+			if (AnimInstance != NULL)
+			{
+				//AnimInstance->Montage_Play(FireAnimation, 1.f);
+			}
 		}
 	}
+	else
+	{
+		return;
+	}
+		
 }
 
 void AThesisShooterCharacter::OnResetVR()
@@ -334,7 +365,7 @@ void AThesisShooterCharacter::TouchUpdate(const ETouchIndex::Type FingerIndex, c
 
 void AThesisShooterCharacter::MoveForward(float Value)
 {
-	if (ThesisPlayerController->GameSection!=1)
+	if (CanMove==true)
 	{
 		if (Value != 0.0f)
 		{
@@ -347,7 +378,7 @@ void AThesisShooterCharacter::MoveForward(float Value)
 
 void AThesisShooterCharacter::MoveRight(float Value)
 {
-	if (ThesisPlayerController->GameSection != 1)
+	if (CanMove==true)
 	{
 		if (Value != 0.0f)
 		{
