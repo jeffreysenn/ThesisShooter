@@ -40,7 +40,7 @@ public:
 	
 	int32 GameSection;
 	
-	FString PlayerIndex = "123";
+	//FString PlayerIndex = "123";
 
 	TArray<float> HitTimesStaticTargets;
 

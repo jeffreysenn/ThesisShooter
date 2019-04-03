@@ -12,3 +12,13 @@ AThesisShooterGameMode::AThesisShooterGameMode()
 	// use our custom HUD class
 	HUDClass = AThesisShooterHUD::StaticClass();
 }
+
+void AThesisShooterGameMode::SetPlayerIndex(FString TextToSet)
+{
+	PlayerIndex = TextToSet;
+}
+
+FString AThesisShooterGameMode::GetPlayerIndex()
+{
+	return PlayerIndex;
+}

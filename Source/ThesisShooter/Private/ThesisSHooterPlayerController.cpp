@@ -3,6 +3,8 @@
 #include "../Public/ThesisSHooterPlayerController.h"
 #include "FileHelper.h"
 #include "Paths.h"
+#include "ThesisShooterGameMode.h"
+#include "Runtime/Engine/Classes/Engine/World.h"
 
 AThesisSHooterPlayerController::AThesisSHooterPlayerController()
 {
@@ -51,7 +53,7 @@ void AThesisSHooterPlayerController::SaveDataToFile()
 {
 
 	UE_LOG(LogTemp, Warning, TEXT("@SaveDataToFile saving data to file "));
-	FString DataContent = FString("Participant: " + PlayerIndex + LINE_TERMINATOR
+	FString DataContent = FString("Participant: " + Cast<AThesisShooterGameMode>(GetWorld()->GetAuthGameMode())->GetPlayerIndex() + LINE_TERMINATOR
 		+ "Shots that hit target: " + FString::FromInt(ShotHits) + LINE_TERMINATOR
 		+ "Total Shots fired: " + FString::FromInt(Shots) + LINE_TERMINATOR
 		//+ "Amount of Targets hit: " +  FString::FromInt(TargetsHit) + LINE_TERMINATOR
@@ -71,10 +73,9 @@ void AThesisSHooterPlayerController::SaveDataToFile()
 			DataContent += FString("" + FString::SanitizeFloat(HitTimesStaticTargets[i]) + LINE_TERMINATOR);
 		}
 	}
-
+	GetWorld()->GetGameInstance
 	DataContent += FString(+LINE_TERMINATOR);
-
-	FString FilePath = FPaths::ConvertRelativePathToFull(FPaths::GameSavedDir()) + TEXT("/DataLog"+ PlayerIndex +".txt");
+	FString FilePath = FPaths::ConvertRelativePathToFull(FPaths::GameSavedDir()) + TEXT("/DataLog_"+ Cast<AThesisShooterGameMode>(GetWorld()->GetAuthGameMode())->GetPlayerIndex() +".txt");
 	FString FileContent = TEXT(""+DataContent);
 	FFileHelper::SaveStringToFile(FileContent, *FilePath, FFileHelper::EEncodingOptions::AutoDetect, &IFileManager::Get(), EFileWrite::FILEWRITE_Append);
 

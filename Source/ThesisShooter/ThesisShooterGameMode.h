@@ -13,6 +13,16 @@ class AThesisShooterGameMode : public AGameModeBase
 
 public:
 	AThesisShooterGameMode();
+
+	
+
+	UFUNCTION(BlueprintCallable)
+	void SetPlayerIndex(FString TextToSet);
+
+	FString GetPlayerIndex();
+
+private:
+	FString PlayerIndex;
 };
 
 
