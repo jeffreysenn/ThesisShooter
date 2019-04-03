@@ -21,7 +21,7 @@ void AMovementSecitonSpawner::BeginPlay()
 
 
 
-	SpawnMovmeentSections(20);
+	SpawnMovmeentSections(HowManyTiles);
 }
 
 // Called every frame

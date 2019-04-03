@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "MovementSecitonSpawner.generated.h"
+#include "ThesisTriggerVolume.generated.h"
 
 UCLASS()
-class THESISSHOOTER_API AMovementSecitonSpawner : public AActor
+class THESISSHOOTER_API AThesisTriggerVolume : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AMovementSecitonSpawner();
+	AThesisTriggerVolume();
 
 protected:
 	// Called when the game starts or when spawned
@@ -23,15 +23,11 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere)
-		int32 HowManyTiles=0;
 
-	UPROPERTY(EditAnywhere)
-	TArray< TSubclassOf<class ASectionTile>> MovementSectionsThatCanSpawn;
+	UFUNCTION(BlueprintCallable)
+	void SwitchGameSectionState(int32 StateToSwitchTo);
 
-
-	TArray<ASectionTile*> MovementSectionsSpawned;
-
-	virtual void SpawnMovmeentSections(int32 SectionsToSpawn);
+	UFUNCTION(BlueprintCallable)
+	virtual void SaveDataToFile();
 
 };

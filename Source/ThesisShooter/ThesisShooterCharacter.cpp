@@ -241,6 +241,9 @@ void AThesisShooterCharacter::OnFire()
 								{
 									if (Cast<ATarget>(OutHit.GetActor())->bIsShootable == true)
 									{
+										if (ThesisGameInstance->GameSection == 0) {
+											ThesisGameInstance->GameSection = 1;
+										}
 										ThesisGameInstance->ShotHits++;
 										ThesisGameInstance->AccuracyScore += Cast<ATarget>(OutHit.GetActor())->OnTargetHit(OutHit.Location);
 
