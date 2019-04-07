@@ -45,6 +45,7 @@ void ATargetSpawner::ActivateRandomTarget(int32 UselessPoint)
 	}
 }
 
+
 void ATargetSpawner::ActivateStaticTarget()
 {
 	int32 NextIndex = GetRandomInt(0, StaticTargets.Num() - 1, PreStaticTargetIndex);
