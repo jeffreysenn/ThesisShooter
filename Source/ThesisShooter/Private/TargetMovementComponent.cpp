@@ -50,13 +50,14 @@ void UTargetMovementComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 		return; 
 	}
 
-	if (FVector::Dist(GetOwner()->GetActorLocation(), TargetLocations[NextTargetIndex]) > AcceptanceRange)
+	if (FVector::Dist(GetOwner()->GetActorLocation(), PreLocation) <= FVector::Dist(TargetLocations[NextTargetIndex], PreLocation))
 	{
 		FVector Direction = (TargetLocations[NextTargetIndex] - PreLocation).GetSafeNormal();
 		GetOwner()->AddActorWorldOffset(Direction * SpeedPerSecond * DeltaTime);
 	}
 	else
 	{
+		GetOwner()->SetActorLocation(TargetLocations[NextTargetIndex]);
 		MoveToNextTarget();
 	}
 }

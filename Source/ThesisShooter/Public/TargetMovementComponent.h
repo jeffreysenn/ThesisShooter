@@ -22,9 +22,6 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Setup")
 	float SpeedPerSecond = 50;
 
-	UPROPERTY(EditAnywhere, Category = "Setup")
-	float AcceptanceRange = 10;
-
 protected:
 	TArray<FVector> TargetLocations;
 	FVector PreLocation;

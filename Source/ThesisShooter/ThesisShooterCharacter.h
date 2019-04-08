@@ -87,6 +87,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
 	FVector GunOffset;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	float RaySpawnLocationOffset = 50;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	float RayRange = 10000;
+
 	/** Projectile class to spawn */
 	UPROPERTY(EditDefaultsOnly, Category=Projectile)
 	TSubclassOf<class AThesisShooterProjectile> ProjectileClass;
@@ -107,7 +113,7 @@ public:
 	bool CanMove = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-		bool CanShoot = true;
+	bool CanShoot = true;
 public:
 	
 	/** Fires a projectile. */

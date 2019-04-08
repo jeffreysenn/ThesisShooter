@@ -228,13 +228,13 @@ void AThesisShooterCharacter::OnFire()
 						))
 						{
 
-							if (World->LineTraceSingleByChannel(OutHit, SpawnLocation, CameraWorldLocation + LookDirection * 9999999, ECollisionChannel::ECC_Visibility, Params, ResponseParam))
+							if (World->LineTraceSingleByChannel(OutHit, SpawnLocation - LookDirection * RaySpawnLocationOffset, CameraWorldLocation + LookDirection * RayRange, ECollisionChannel::ECC_Visibility, Params, ResponseParam))
 							{
 								ThesisGameInstance->Shots++;
 
-								FColor Color = FColor(0, 0, 255);
-								DrawDebugLine(World, SpawnLocation, CameraWorldLocation + LookDirection * 9999999, Color, false, 1.0f, 0, 4.0f);
-								UE_LOG(LogTemp, Warning, TEXT("Hit %s"), *OutHit.GetActor()->GetName());
+								//FColor Color = FColor(0, 0, 255);
+								//DrawDebugLine(World, SpawnLocation - LookDirection * RaySpawnLocationOffset, CameraWorldLocation + LookDirection * RayRange, Color, false, 1.0f, 0, 4.0f);
+								//UE_LOG(LogTemp, Warning, TEXT("Hit %s"), *OutHit.GetActor()->GetName());
 
 								//OnTargetHit
 								if (Cast<ATarget>(OutHit.GetActor()))
