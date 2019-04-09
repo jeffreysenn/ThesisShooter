@@ -15,6 +15,7 @@
 #include "Public/Target.h"
 #include "Public/ThesisSHooterPlayerController.h"
 #include "C_ThesisGameInstance.h"
+#include "Haptics/HapticFeedbackEffect_Base.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -85,6 +86,8 @@ AThesisShooterCharacter::AThesisShooterCharacter()
 	VR_MuzzleLocation->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));		// Counteract the rotation of the VR gun model.
 
 	bUsingGyroScope = true;
+	
+
 }
 
 void AThesisShooterCharacter::BeginPlay()
@@ -186,6 +189,7 @@ void AThesisShooterCharacter::OnFire()
 	if (CanShoot==true) 
 	{
 		UWorld* const World = GetWorld();
+		//Cast<APlayerController>(this->GetController())->PlayDynamicForceFeedback(0.5f,0.5f,false,true,false,true)
 		if (World != NULL)
 		{
 			if (ThesisGameInstance != NULL)
@@ -228,12 +232,12 @@ void AThesisShooterCharacter::OnFire()
 						))
 						{
 
-							if (World->LineTraceSingleByChannel(OutHit, SpawnLocation - LookDirection * RaySpawnLocationOffset, CameraWorldLocation + LookDirection * RayRange, ECollisionChannel::ECC_Visibility, Params, ResponseParam))
+							if (World->LineTraceSingleByChannel(OutHit, CameraWorldLocation - LookDirection * RaySpawnLocationOffset, CameraWorldLocation + LookDirection * RayRange, ECollisionChannel::ECC_Visibility, Params, ResponseParam))
 							{
 								ThesisGameInstance->Shots++;
 
 								//FColor Color = FColor(0, 0, 255);
-								//DrawDebugLine(World, SpawnLocation - LookDirection * RaySpawnLocationOffset, CameraWorldLocation + LookDirection * RayRange, Color, false, 1.0f, 0, 4.0f);
+								//DrawDebugLine(World, CameraWorldLocation - LookDirection * RaySpawnLocationOffset, CameraWorldLocation + LookDirection * RayRange, Color, false, 1.0f, 0, 4.0f);
 								//UE_LOG(LogTemp, Warning, TEXT("Hit %s"), *OutHit.GetActor()->GetName());
 
 								//OnTargetHit

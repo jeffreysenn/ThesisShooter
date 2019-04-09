@@ -13,7 +13,7 @@ AThesisSHooterPlayerController::AThesisSHooterPlayerController()
 
 	
 
-
+	bForceFeedbackEnabled = true;
 }
 
 
