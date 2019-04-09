@@ -91,7 +91,7 @@ public:
 	float RaySpawnLocationOffset = 50;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-	float RayRange = 10000;
+	float RayRange = 100000000;
 
 	/** Projectile class to spawn */
 	UPROPERTY(EditDefaultsOnly, Category=Projectile)

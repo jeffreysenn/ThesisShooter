@@ -42,7 +42,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	int32 InnerCircleScore = 4;
 
-
+	UPROPERTY(BlueprintAssignable)
 	FTargetDelegate OnTargetHitDelegate;
 
 protected:
