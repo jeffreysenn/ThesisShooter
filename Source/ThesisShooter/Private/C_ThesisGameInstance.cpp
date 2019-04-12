@@ -18,7 +18,7 @@ void UC_ThesisGameInstance::SaveDataToFile()
 		+ "Second section time: " + FString::SanitizeFloat(SecondSectionTime) + LINE_TERMINATOR
 		+ "Third section time: " + FString::SanitizeFloat(ThirdSectionTime) + LINE_TERMINATOR
 		+ "Total time: " + FString::SanitizeFloat(FirstSectionTime + SecondSectionTime + ThirdSectionTime) + LINE_TERMINATOR
-		+ "Hit Times On First Section Targets: " + LINE_TERMINATOR);
+		+ "Hit Times On Shooting Section Targets: " + LINE_TERMINATOR);
 
 
 	if (HitTimesFirstSectionTargets.Num())
@@ -26,6 +26,17 @@ void UC_ThesisGameInstance::SaveDataToFile()
 		for (int32 i = 0; i < HitTimesFirstSectionTargets.Num(); i++)
 		{
 			DataContent += FString("" + FString::SanitizeFloat(HitTimesFirstSectionTargets[i]) + LINE_TERMINATOR);
+		}
+	}
+
+	DataContent += FString("Hit Times On Combined Section Targets:");
+	DataContent += FString(+ LINE_TERMINATOR);
+
+	if (HitTimesThirdSectionTargets.Num())
+	{
+		for (int32 i = 0; i < HitTimesThirdSectionTargets.Num(); i++)
+		{
+			DataContent += FString("" + FString::SanitizeFloat(HitTimesThirdSectionTargets[i]) + LINE_TERMINATOR);
 		}
 	}
 

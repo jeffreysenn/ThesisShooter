@@ -234,7 +234,8 @@ void AThesisShooterCharacter::OnFire()
 
 							if (World->LineTraceSingleByChannel(OutHit, CameraWorldLocation - LookDirection * RaySpawnLocationOffset, CameraWorldLocation + LookDirection * RayRange, ECollisionChannel::ECC_Visibility, Params, ResponseParam))
 							{
-								ThesisGameInstance->Shots++;
+								
+								
 
 								//FColor Color = FColor(0, 0, 255);
 								//DrawDebugLine(World, CameraWorldLocation - LookDirection * RaySpawnLocationOffset, CameraWorldLocation + LookDirection * RayRange, Color, false, 1.0f, 0, 4.0f);
@@ -257,11 +258,16 @@ void AThesisShooterCharacter::OnFire()
 										}
 										else if (ThesisGameInstance->GameSection == 3)
 										{
-
+											ThesisGameInstance->HitTimesThirdSectionTargets.Add(UGameplayStatics::GetRealTimeSeconds(GetWorld()));
 										}
 
 									}
 
+								}
+
+								if (ThesisGameInstance->GameSection != 0)
+								{
+									ThesisGameInstance->Shots++;
 								}
 
 							}

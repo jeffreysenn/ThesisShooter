@@ -38,9 +38,12 @@ public:
 	float SecondSectionTime=0;
 	float ThirdSectionTime=0;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 GameSection = 0;
 
 
 	TArray<float> HitTimesFirstSectionTargets;
+
+	TArray<float> HitTimesThirdSectionTargets;
 	
 };
